@@ -85,6 +85,8 @@
     <Compile Include="AcceptanceTests\FailureTimingAcceptanceTests.cs" />
     <Compile Include="AcceptanceTests\FixtureDataAcceptanceTests.cs" />
     <Compile Include="AcceptanceTests\SkipAcceptanceTests.cs" />
+    <Compile Include="Sdk\Commands\AssemblyCommands\AssemblyLifeCycleCommandFactoryTests.cs" />
+    <Compile Include="Sdk\Commands\AssemblyCommands\AssemblyLifeCycleCommandTests.cs" />
     <Compile Include="Sdk\Exceptions\DoesNotThrowExceptionTests.cs" />
     <Compile Include="Sdk\Exceptions\ExceptionRequirementTests.cs" />
     <Compile Include="FactAttributeTests.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Sdk\Exceptions\NotInRangeExceptionTests.cs" />
     <Compile Include="Sdk\Exceptions\ThrowsExceptionTests.cs" />
     <Compile Include="Sdk\ExecutorCallbackTests.cs" />
+    <Compile Include="Sdk\ExecutorTests.cs" />
     <Compile Include="Sdk\Results\PassedResultTests.cs" />
     <Compile Include="Sdk\Results\SkipResultTests.cs" />
     <Compile Include="Sdk\Utilities\MultiValueDictionaryTests.cs" />

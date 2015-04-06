@@ -59,6 +59,30 @@ namespace Xunit.Sdk
         }
 
         /// <summary>
+        /// Retrieves a list of the startup methods from the class.
+        /// </summary>
+        /// <param name="type">The type to be inspected</param>
+        /// <returns>The startup methods</returns>
+        public static IEnumerable<IMethodInfo> GetStartUpMethods(ITypeInfo type)
+        {
+            foreach (IMethodInfo method in type.GetMethods())
+                if (MethodUtility.HasStartUp(method))
+                    yield return method;
+        }
+
+        /// <summary>
+        /// Retrieves a list of the shutdown methods from the class.
+        /// </summary>
+        /// <param name="type">The type to be inspected</param>
+        /// <returns>The shutdown methods</returns>
+        public static IEnumerable<IMethodInfo> GetShutDownMethods(ITypeInfo type)
+        {
+            foreach (IMethodInfo method in type.GetMethods())
+                if (MethodUtility.HasShutDown(method))
+                    yield return method;
+        }
+
+        /// <summary>
         /// Determines if the test class has a <see cref="RunWithAttribute"/> applied to it.
         /// </summary>
         /// <param name="type">The type to be inspected</param>
@@ -114,6 +138,36 @@ namespace Xunit.Sdk
         public static bool IsTestClass(ITypeInfo type)
         {
             return (IsStatic(type) || !IsAbstract(type)) && (HasRunWith(type) || ContainsTestMethods(type));
+        }
+
+        /// <summary>
+        /// Determines if a class contains an assembly <see cref="StartUpAttribute"/> method.
+        /// </summary>
+        /// <param name="type">The type to be inspected</param>
+        /// <returns>True if the type has an assembly <see cref="StartUpAttribute"/> method; false, otherwise</returns>
+        public static bool IsAssemblyStartUpClass(ITypeInfo type)
+        {
+#pragma warning disable 168
+            foreach (IMethodInfo method in GetStartUpMethods(type))
+                return true;
+#pragma warning enable 168
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if a class contains an assembly <see cref="ShutDownAttribute"/> method.
+        /// </summary>
+        /// <param name="type">The type to be inspected</param>
+        /// <returns>True if the type has an assembly <see cref="ShutDownAttribute"/> method; false, otherwise</returns>
+        public static bool IsAssemblyShutDownClass(ITypeInfo type)
+        {
+#pragma warning disable 168
+            foreach (IMethodInfo method in GetShutDownMethods(type))
+                return true;
+#pragma warning enable 168
+
+            return false;
         }
     }
 }

@@ -82,5 +82,19 @@ namespace Xunit
         /// no status callbacks (and cancellation isn't possible).</param>
         /// <returns>Returns the fully-formed class node for the class of the tests that were just run.</returns>
         XmlNode RunTests(string type, List<string> methods, Predicate<XmlNode> callback);
+
+        /// <summary>
+        /// Run assembly start-up methods
+        /// </summary>
+        /// <param name="callback">The callback which is called when the start-up methods complete</param>
+        /// <returns>Returns the fully-formed class node for the class of the tests that were just run.</returns>
+        XmlNode RunAssemblyStartUp(Predicate<XmlNode> callback);
+
+        /// <summary>
+        /// Run assembly shutdown methods
+        /// </summary>
+        /// <param name="callback">The callback which is called when the shutdown methods complete</param>
+        /// <returns>Returns the fully-formed class node for the class of the tests that were just run.</returns>
+        XmlNode RunAssemblyShutDown(Predicate<XmlNode> callback);
     }
 }

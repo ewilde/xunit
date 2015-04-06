@@ -68,6 +68,9 @@
     </Compile>
     <Compile Include="Assert.cs" />
     <Compile Include="Sdk\AsyncTestSyncContext.cs" />
+    <Compile Include="Sdk\Commands\AssemblyCommands\AssemblyLifeCycleCommand.cs" />
+    <Compile Include="Sdk\Commands\AssemblyCommands\AssemblyLifeCycleCommandFactory.cs" />
+    <Compile Include="Sdk\Commands\AssemblyCommands\IAssemblyLifeCycleCommand.cs" />
     <Compile Include="Sdk\Commands\TestCommands\ExceptionAndOutputCaptureCommand.cs" />
     <Compile Include="Sdk\Commands\TestCommands\FactCommand.cs" />
     <Compile Include="Sdk\Exceptions\AssertActualExpectedException.cs" />
@@ -109,6 +112,8 @@
     <Compile Include="Sdk\Commands\TestCommands\DelegatingTestCommand.cs" />
     <Compile Include="Sdk\Commands\TestCommands\FixtureCommand.cs" />
     <Compile Include="Sdk\TestTimer.cs" />
+    <Compile Include="ShutDownAttribute.cs" />
+    <Compile Include="StartUpAttribute.cs" />
     <Compile Include="TraitAttribute.cs" />
     <Compile Include="Sdk\Commands\ClassCommands\TestClassCommandRunner.cs" />
     <Compile Include="Sdk\Commands\ClassCommands\TestClassCommandFactory.cs" />

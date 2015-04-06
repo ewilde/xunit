@@ -158,6 +158,42 @@ public class MethodUtilityTests
         }
 
         [Fact]
+        public void MethodDoesNotHaveStartUpAttribute()
+        {
+            Type testClassType = typeof(ClassWithStartUpShutDown);
+            MethodInfo methodInfo = testClassType.GetMethod("MethodDoesNotHaveStartUpAttribute");
+
+            Assert.False(MethodUtility.HasStartUp(Reflector.Wrap(methodInfo)));
+        }
+
+        [Fact]
+        public void MethodHasStartUpAttribute()
+        {
+            Type testClassType = typeof(ClassWithStartUpShutDown);
+            MethodInfo methodInfo = testClassType.GetMethod("StartUpMethod");
+
+            Assert.True(MethodUtility.HasStartUp(Reflector.Wrap(methodInfo)));
+        }
+
+        [Fact]
+        public void MethodDoesNotHaveShutDownAttribute()
+        {
+            Type testClassType = typeof(ClassWithStartUpShutDown);
+            MethodInfo methodInfo = testClassType.GetMethod("MethodDoesNotHaveShutDownAttribute");
+
+            Assert.False(MethodUtility.HasShutDown(Reflector.Wrap(methodInfo)));
+        }
+
+        [Fact]
+        public void MethodHasShutDownAttribute()
+        {
+            Type testClassType = typeof(ClassWithStartUpShutDown);
+            MethodInfo methodInfo = testClassType.GetMethod("ShutDownMethod");
+
+            Assert.True(MethodUtility.HasShutDown(Reflector.Wrap(methodInfo)));
+        }
+
+        [Fact]
         public void ClassHasTrait()
         {
             Type testClassType = typeof(ClassWithClassTraits);
@@ -337,6 +373,18 @@ public class MethodUtilityTests
 
         [Trait("Description", "more than just the test method name")]
         public void SingleTraitOnAMethod() { }
+    }
+
+    internal class ClassWithStartUpShutDown
+    {
+        public void MethodDoesNotHaveStartUpAttribute() { }
+        public void MethodDoesNotHaveShutDownAttribute() { }
+
+        [StartUp]
+        public void StartUpMethod() { }
+
+        [ShutDown]
+        public void ShutDownMethod() { }
     }
 
     [Trait("Description", "more than just the test method name")]

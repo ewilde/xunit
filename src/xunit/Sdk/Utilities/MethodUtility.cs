@@ -110,6 +110,26 @@ namespace Xunit.Sdk
         }
 
         /// <summary>
+        /// Determines whether a test method has a <see cref="StartUpAttribute"/>.
+        /// </summary>
+        /// <param name="method">The method to be inspected</param>
+        /// <returns>True if the method has a <see cref="StartUpAttribute"/>; false, otherwise</returns>
+        public static bool HasStartUp(IMethodInfo method)
+        {
+            return method == null || method.HasAttribute(typeof(StartUpAttribute));
+        }
+
+        /// <summary>
+        /// Determines whether a test method has a <see cref="ShutDownAttribute"/>.
+        /// </summary>
+        /// <param name="method">The method to be inspected</param>
+        /// <returns>True if the method has a <see cref="ShutDownAttribute"/>; false, otherwise</returns>
+        public static bool HasShutDown(IMethodInfo method)
+        {
+            return method == null || method.HasAttribute(typeof(ShutDownAttribute));
+        }
+
+        /// <summary>
         /// Determines whether a test method should be skipped.
         /// </summary>
         /// <param name="method">The method to be inspected</param>

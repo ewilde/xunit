@@ -220,6 +220,30 @@ namespace Xunit
         }
 
         /// <inheritdoc/>
+        public XmlNode RunAssemblyStartUp(Predicate<XmlNode> callback)
+        {
+            var handler = MakeXmlNodeCallbackHandler(callback, "assembly");
+
+            CreateObject("Xunit.Sdk.Executor+RunAssemblyStartUp", executor, handler);
+
+            handler.LastNodeArrived.WaitOne();
+
+            return handler.LastNode;
+        }
+
+        /// <inheritdoc/>
+        public XmlNode RunAssemblyShutDown(Predicate<XmlNode> callback)
+        {
+            var handler = MakeXmlNodeCallbackHandler(callback, "assembly");
+
+            CreateObject("Xunit.Sdk.Executor+RunAssemblyShutDown", executor, handler);
+
+            handler.LastNodeArrived.WaitOne();
+
+            return handler.LastNode;
+        }
+
+        /// <inheritdoc/>
         public XmlNode RunAssembly(Predicate<XmlNode> callback)
         {
             var handler = MakeXmlNodeCallbackHandler(callback, "assembly");

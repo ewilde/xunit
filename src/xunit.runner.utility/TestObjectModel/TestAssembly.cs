@@ -127,6 +127,7 @@ namespace Xunit
             if (ExecutorWrapper.ConfigFilename != null)
                 AddAttribute(assemblyNode, "configFile", ExecutorWrapper.ConfigFilename);
 
+            AssemblyStartUp();
             callback.AssemblyStart(this);
 
             var callbackWrapper = new TestMethodRunnerCallbackWrapper(callback);
@@ -156,6 +157,7 @@ namespace Xunit
                         }
                 }
 
+            AssemblyShutDown();
             callback.AssemblyFinished(this, callbackWrapper.Total, callbackWrapper.Failed,
                                       callbackWrapper.Skipped, callbackWrapper.Time);
 
@@ -168,6 +170,32 @@ namespace Xunit
             AddAttribute(assemblyNode, "test-framework", String.Format("xUnit.net {0}", ExecutorWrapper.XunitVersion));
 
             return assemblyNode.OuterXml.Replace(" />", ">") + result + "</assembly>";
+        }
+
+        private string AssemblyStartUp()
+        {
+            try
+            {
+                XmlNode classNode = this.ExecutorWrapper.RunAssemblyStartUp(node => true);
+                return classNode.OuterXml;
+            }
+            catch (Exception ex)
+            {
+                return String.Empty;
+            }            
+        }
+
+        private string AssemblyShutDown()
+        {
+            try
+            {
+                XmlNode classNode = this.ExecutorWrapper.RunAssemblyShutDown(node => true);
+                return classNode.OuterXml;
+            }
+            catch (Exception ex)
+            {
+                return String.Empty;
+            }            
         }
 
         static void AddAttribute(XmlNode node, string name, object value)

@@ -134,6 +134,72 @@ namespace Xunit.Sdk
             }
         }
 
+        public class RunAssemblyStartUp : MarshalByRefObject
+        {
+            /// <summary/>
+            public RunAssemblyStartUp(Executor executor, object _handler)
+            {
+                ExecutorCallback handler = ExecutorCallback.Wrap(_handler);
+
+                executor.RunOnSTAThreadWithPreservedWorkingDirectory(() =>
+                {
+                    bool @continue = true;
+                    AssemblyResult results =
+                        new AssemblyResult(executor.assemblyFilename,
+                            AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+
+                    var types = executor.assembly.GetExportedTypes();
+                    IAssemblyLifeCycleCommand lifeCycleCommand = AssemblyLifeCycleCommandFactory.Make(types);
+                    if (lifeCycleCommand != null)
+                    {
+                        lifeCycleCommand.StartUp();
+                    }
+
+                    OnTestResult(results, handler);
+                });
+            }
+
+            /// <summary/>
+            [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.Infrastructure)]
+            public override Object InitializeLifetimeService()
+            {
+                return null;
+            }
+        }
+
+        public class RunAssemblyShutDown : MarshalByRefObject
+        {
+            /// <summary/>
+            public RunAssemblyShutDown(Executor executor, object _handler)
+            {
+                ExecutorCallback handler = ExecutorCallback.Wrap(_handler);
+                
+                executor.RunOnSTAThreadWithPreservedWorkingDirectory(() =>
+                {
+                    bool @continue = true;
+                    AssemblyResult results =
+                        new AssemblyResult(executor.assemblyFilename,
+                            AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+
+                    var types = executor.assembly.GetExportedTypes();
+                    IAssemblyLifeCycleCommand lifeCycleCommand = AssemblyLifeCycleCommandFactory.Make(types);
+                    if (lifeCycleCommand != null)
+                    {
+                        lifeCycleCommand.ShutDown();
+                    }
+
+                    OnTestResult(results, handler);
+                });
+            }
+
+            /// <summary/>
+            [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.Infrastructure)]
+            public override Object InitializeLifetimeService()
+            {
+                return null;
+            }
+        }
+
         /// <summary/>
         public class RunAssembly : MarshalByRefObject
         {

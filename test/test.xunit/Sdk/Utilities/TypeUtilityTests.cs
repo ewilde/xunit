@@ -76,6 +76,60 @@ public class TypeUtilityTests
         Assert.True(TypeUtility.IsStatic(Reflector.Wrap(typeof(StaticClass))));
     }
 
+    [Fact]
+    public void CanDetermineIfClassIsAssemblyStartUp()
+    {
+        Assert.True(TypeUtility.IsAssemblyStartUpClass(Reflector.Wrap(typeof(ClassWithStartupAttribute))));
+        Assert.False(TypeUtility.IsAssemblyStartUpClass(Reflector.Wrap(typeof(ClassWithShutDownAttribute))));
+    }
+
+    [Fact]
+    public void CanDetermineIfClassIsAssemblyShutDown()
+    {
+        Assert.True(TypeUtility.IsAssemblyShutDownClass(Reflector.Wrap(typeof(ClassWithShutDownAttribute))));
+        Assert.False(TypeUtility.IsAssemblyShutDownClass(Reflector.Wrap(typeof(ClassWithStartupAttribute))));
+    }
+
+    [Fact]
+    public void ClassContains2MethodsWithAssemblyStartUpAttributes()
+    {
+        List<IMethodInfo> methods =
+            new List<IMethodInfo>(TypeUtility.GetStartUpMethods(Reflector.Wrap(typeof(ClassWith2StartUpAndShutDownAttribute))));
+
+        Assert.Equal(2, methods.Count);
+        Assert.Equal("Initialize1", methods[0].Name);
+        Assert.Equal("Initialize2", methods[1].Name);
+    }
+
+    [Fact]
+    public void ClassContainsNoMethodsWithAssemblyStartUpAttribute()
+    {
+        List<IMethodInfo> methods =
+            new List<IMethodInfo>(TypeUtility.GetStartUpMethods(Reflector.Wrap(typeof(ClassWithNoTestMethods))));
+
+        Assert.Equal(0, methods.Count);
+    }
+    [Fact]
+    public void ClassContains2MethodsWithAssemblyShutDownAttributes()
+    {
+        List<IMethodInfo> methods =
+            new List<IMethodInfo>(TypeUtility.GetShutDownMethods(Reflector.Wrap(typeof(ClassWith2StartUpAndShutDownAttribute))));
+
+        Assert.Equal(2, methods.Count);
+        Assert.Equal("TearDown1", methods[0].Name);
+        Assert.Equal("TearDown2", methods[1].Name);
+    }
+
+    [Fact]
+    public void ClassContainsNoMethodsWithAssemblyShutDownAttribute()
+    {
+        List<IMethodInfo> methods =
+            new List<IMethodInfo>(TypeUtility.GetShutDownMethods(Reflector.Wrap(typeof(ClassWithNoTestMethods))));
+
+        Assert.Equal(0, methods.Count);
+    }
+
+
     class ClassWith2TestMethods
     {
         [Fact]
@@ -148,6 +202,51 @@ public class TypeUtilityTests
         public bool IsTestMethod(IMethodInfo testMethod)
         {
             return false;
+        }
+    }
+
+    public class ClassWithStartupAttribute
+    {
+        [StartUp]
+        public void Initialize()
+        {
+            
+        }
+    }
+
+    public class ClassWithShutDownAttribute
+    {
+        [ShutDown]
+        public void TearDown()
+        {
+            
+        }
+    }
+
+    public class ClassWith2StartUpAndShutDownAttribute
+    {
+        [StartUp]
+        public void Initialize1()
+        {
+
+        }
+
+        [StartUp]
+        public void Initialize2()
+        {
+
+        }
+
+        [ShutDown]
+        public void TearDown1()
+        {
+            
+        }
+
+        [ShutDown]
+        public void TearDown2()
+        {
+            
         }
     }
 }
