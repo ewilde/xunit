@@ -178,7 +178,7 @@ namespace Xunit.Sdk
                     try
                     {
                         await AfterTestAssemblyStartingAsync();
-
+                        // TODO: AssemblyStart
                         var masterStopwatch = Stopwatch.StartNew();
                         totalSummary = await RunTestCollectionsAsync(messageBus, cancellationTokenSource);
                         // Want clock time, not aggregated run time
@@ -186,6 +186,7 @@ namespace Xunit.Sdk
 
                         Aggregator.Clear();
                         await BeforeTestAssemblyFinishedAsync();
+                        // TODO: AssemblyStop
 
                         if (Aggregator.HasExceptions)
                             messageBus.QueueMessage(new TestAssemblyCleanupFailure(TestCases.Cast<ITestCase>(), TestAssembly, Aggregator.ToException()));
