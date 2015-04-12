@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Xunit.Abstractions;
@@ -145,6 +146,50 @@ namespace Xunit.Sdk
                 resolvedTypes[idx] = ResolveGenericType(genericTypes[idx], parameters, parameterInfos);
 
             return resolvedTypes;
+        }
+
+        /// <summary>
+        /// Retrieves a list of the startup methods from the class.
+        /// </summary>
+        /// <param name="type">The type to be inspected</param>
+        /// <returns>The startup methods</returns>
+        public static IEnumerable<IMethodInfo> GetStartUpMethods(ITypeInfo type)
+        {
+            foreach (IMethodInfo method in type.GetMethods(false))
+                if (HasStartUp(method))
+                    yield return method;
+        }
+
+        /// <summary>
+        /// Retrieves a list of the shutdown methods from the class.
+        /// </summary>
+        /// <param name="type">The type to be inspected</param>
+        /// <returns>The shutdown methods</returns>
+        public static IEnumerable<IMethodInfo> GetShutDownMethods(ITypeInfo type)
+        {
+            foreach (IMethodInfo method in type.GetMethods(false))
+                if (HasShutDown(method))
+                    yield return method;
+        }
+
+        /// <summary>
+        /// Determines whether a test method has a <see cref="StartUpAttribute"/>.
+        /// </summary>
+        /// <param name="method">The method to be inspected</param>
+        /// <returns>True if the method has a <see cref="StartUpAttribute"/>; false, otherwise</returns>
+        public static bool HasStartUp(IMethodInfo method)
+        {
+            return method == null || method.GetCustomAttributes(typeof(StartUpAttribute)).Any();
+        }
+
+        /// <summary>
+        /// Determines whether a test method has a <see cref="ShutDownAttribute"/>.
+        /// </summary>
+        /// <param name="method">The method to be inspected</param>
+        /// <returns>True if the method has a <see cref="ShutDownAttribute"/>; false, otherwise</returns>
+        public static bool HasShutDown(IMethodInfo method)
+        {
+            return method == null || method.GetCustomAttributes(typeof(ShutDownAttribute)).Any();
         }
     }
 }

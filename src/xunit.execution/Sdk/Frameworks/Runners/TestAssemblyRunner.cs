@@ -178,7 +178,12 @@ namespace Xunit.Sdk
                     try
                     {
                         await AfterTestAssemblyStartingAsync();
-                        // TODO: AssemblyStart
+                        IAssemblyLifeCycleCommand lifeCycleCommand = AssemblyLifeCycleCommandFactory.Make(TestAssembly.Assembly.GetTypes(false));
+                        if (lifeCycleCommand != null)
+                        {
+                            lifeCycleCommand.StartUp();
+                        }
+
                         var masterStopwatch = Stopwatch.StartNew();
                         totalSummary = await RunTestCollectionsAsync(messageBus, cancellationTokenSource);
                         // Want clock time, not aggregated run time
@@ -186,7 +191,11 @@ namespace Xunit.Sdk
 
                         Aggregator.Clear();
                         await BeforeTestAssemblyFinishedAsync();
-                        // TODO: AssemblyStop
+
+                        if (lifeCycleCommand != null)
+                        {
+                            lifeCycleCommand.ShutDown();
+                        }
 
                         if (Aggregator.HasExceptions)
                             messageBus.QueueMessage(new TestAssemblyCleanupFailure(TestCases.Cast<ITestCase>(), TestAssembly, Aggregator.ToException()));
